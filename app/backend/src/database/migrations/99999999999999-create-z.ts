@@ -12,6 +12,7 @@ export default {
       },
     });
   },
+  
   down(queryInterface: QueryInterface) {
     return queryInterface.dropTable('trybe_eval');
   },
