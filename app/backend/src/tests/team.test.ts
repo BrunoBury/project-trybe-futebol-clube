@@ -18,4 +18,12 @@ describe('Teams test', function() {
         expect(status).to.be.equal(200);
         expect(body).to.be.deep.equal(teamMock);
     });
+    
+    it('Should return a specific team by ID and status ok', async () => {
+        const teamId = 1;
+        sinon.stub(TeamModel, 'getTeamById').withArgs(teamId).resolves(teamMock[0] as any);
+        const { status, body } = await chai.request(app).get(`/teams/${teamId}`);
+        expect(status).to.be.equal(200);
+        expect(body).to.be.deep.equal(teamMock[0]);
+    });
 });

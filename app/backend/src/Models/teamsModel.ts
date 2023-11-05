@@ -6,4 +6,14 @@ export default class TeamModel {
     const allTeams = await SequelizeTeamModel.findAll();
     return allTeams.map((team) => team.toJSON() as interfaceTeams);
   }
+
+  static async getTeamById(id: number): Promise<interfaceTeams | undefined> {
+    const team = await SequelizeTeamModel.findByPk(id);
+    console.log(team);
+    if (!team) {
+      return undefined;
+    }
+
+    return team.toJSON() as interfaceTeams;
+  }
 }
