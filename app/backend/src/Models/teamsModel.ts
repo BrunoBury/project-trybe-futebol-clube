@@ -9,7 +9,7 @@ export default class TeamModel {
 
   static async getTeamById(id: number): Promise<interfaceTeams | undefined> {
     const team = await SequelizeTeamModel.findByPk(id);
-    console.log(team);
+    // console.log(team);
     if (!team) {
       return undefined;
     }
