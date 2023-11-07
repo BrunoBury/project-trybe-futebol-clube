@@ -49,3 +49,5 @@ SequelizeUserModel.init({
   timestamps: false,
   underscored: true,
 });
+
+export default SequelizeUserModel;
