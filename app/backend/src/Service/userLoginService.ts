@@ -10,13 +10,16 @@ export default class userLoginService {
     const user = await SequelizeUserModel.findOne({ where: { email } });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('Invalid email or password');
+    }
+    if (password.length < 6) {
+      throw new Error('Password must have at least 6 characters');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new Error('Invalid email or password');
     }
     return user;
   }

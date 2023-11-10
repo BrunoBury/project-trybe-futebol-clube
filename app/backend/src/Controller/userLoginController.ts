@@ -44,7 +44,7 @@ export default class UserLoginController {
 
       await handleSuccessfulLogin(req, res, email, password);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(401).json({ message: 'Invalid email or password' });
     }
   }
 }
