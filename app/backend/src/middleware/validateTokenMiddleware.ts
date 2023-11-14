@@ -6,13 +6,16 @@ export default function validateTokenMiddleware(
   res: Response,
   next: NextFunction,
 ): void {
-  const token = req.headers.authorization?.split(' ')[1];
   // console.log(req.headers.authorization);
-  try {
-    if (!token) {
-      throw new Error('Token not found');
-    }
+  const authorizationHeader = req.headers.authorization;
 
+  if (!authorizationHeader) {
+    res.status(401).json({ message: 'Token not found' });
+    return;
+  }
+  const token = authorizationHeader.split(' ')[1];
+
+  try {
     const payload = verifyToken(token);
     req.body.payload = payload;
     // console.log(req.body);
