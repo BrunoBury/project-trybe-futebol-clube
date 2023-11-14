@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 
-const secret = process.env.JWT_SECRET || 'secret';
+const secret = process.env.JWT_SECRET || 'jwt_secret';
 
 export function generateToken(payload: any): string {
   // console.log(payload);
@@ -8,5 +8,10 @@ export function generateToken(payload: any): string {
 }
 
 export function verifyToken(token: string): any {
-  return verify(token, secret);
+  // console.log({ token });
+  // console.log(verify('', ''));
+  const result = verify(token, secret);
+  // console.log({ result });
+  // return verify(token, secret);
+  return result as any;
 }

@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import SequelizeUserModel from '../database/models/userLoginModel';
+import UserModel from '../Models/userLoginModel';
 
 export default class userLoginService {
   static async authenticateUser(email: string, password: string) {
@@ -21,6 +22,15 @@ export default class userLoginService {
     if (!isPasswordValid) {
       throw new Error('Invalid email or password');
     }
+    return user;
+  }
+
+  static async getRole(email: string): Promise<string | null> {
+    const user = await UserModel.getRole(email);
+    if (!user) {
+      return null;
+    }
+
     return user;
   }
 }

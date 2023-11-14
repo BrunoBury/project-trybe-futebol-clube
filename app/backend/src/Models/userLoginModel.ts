@@ -13,4 +13,13 @@ export default class UserModel {
 
     return user.toJSON() as InterfaceUserLogin;
   }
+
+  static async getRole(email: string): Promise<string | null> {
+    const user = await SequelizeUserModel.findOne({ where: { email } });
+    if (!user) {
+      return null;
+    }
+    const { role } = user.dataValues;
+    return role;
+  }
 }
