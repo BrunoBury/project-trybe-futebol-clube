@@ -9,6 +9,16 @@ export default class MatchesModel {
     return matches.map((match) => this.formatMatchResponse(match));
   }
 
+  static async getMatchesByStatus(inProgress: boolean): Promise<InterfaceMatches[]> {
+    const matches = await SequelizeMatchesModel.findAll({
+      where: {
+        inProgress,
+      },
+      include: ['homeTeam', 'awayTeam'],
+    });
+    return matches.map((match) => this.formatMatchResponse(match));
+  }
+
   private static formatMatchResponse(match: any): InterfaceMatches {
     return {
       id: match.id,

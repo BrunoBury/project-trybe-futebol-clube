@@ -7,6 +7,11 @@ export default class MatchesService {
     return matches.map((match) => this.formatMatchResponse(match));
   }
 
+  static async getMatchesByStatus(inProgress: boolean): Promise<InterfaceMatches[]> {
+    const matches = await MatchesModel.getMatchesByStatus(inProgress);
+    return matches.map((match) => this.formatMatchResponse(match));
+  }
+
   private static formatMatchResponse(match: any): InterfaceMatches {
     return {
       id: match.id,
