@@ -12,6 +12,15 @@ export default class MatchesService {
     return matches.map((match) => this.formatMatchResponse(match));
   }
 
+  static async finishMatch(id: number): Promise<boolean> {
+    try {
+      const success = await MatchesModel.finishMatch(id);
+      return success;
+    } catch (error: any) {
+      throw new Error(`Erro ao finalizar a partida: ${error.message}`);
+    }
+  }
+
   private static formatMatchResponse(match: any): InterfaceMatches {
     return {
       id: match.id,

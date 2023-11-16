@@ -31,4 +31,17 @@ export default class MatchesModel {
       awayTeam: match.awayTeam ? { teamName: match.awayTeam.teamName } : null,
     };
   }
+
+  static async finishMatch(id: number): Promise<boolean> {
+    const match = await SequelizeMatchesModel.findByPk(id);
+
+    if (!match) {
+      throw new Error('Partida não encontrada');
+    }
+
+    match.inProgress = false;
+    await match.save();
+
+    return true;
+  }
 }
