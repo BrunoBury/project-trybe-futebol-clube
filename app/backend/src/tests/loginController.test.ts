@@ -112,16 +112,17 @@ describe('Email Validation Middleware', () => {
     expect(req.body.email).to.equal('valid@example.com');
     done();
   });
+
   it('Should reject invalid email', (done) => {
     const req: Request = {
       body: { email: 'invalid-email' },
     } as Request;
     const res: Response = {
       status: (statusCode) => {
-        expect(statusCode).to.equal(400);
+        expect(statusCode).to.equal(401);
         return {
           json: (data) => {
-            expect(data).to.have.property('message', 'All fields must be filled');
+            expect(data).to.have.property('message', 'Invalid email or password' );
             done();
           },
         };
