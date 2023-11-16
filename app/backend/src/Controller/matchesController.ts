@@ -35,4 +35,25 @@ export default class MatchesController {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  static async updateMatchResults(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+
+    try {
+      const success = await MatchesService.updateMatchResults(Number(id), {
+        homeTeamGoals,
+        awayTeamGoals,
+      });
+
+      if (success) {
+        res.status(200).json({ message: 'Resultados da partida atualizados' });
+      } else {
+        res.status(404).json({ error: 'Partida não encontrada' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao atualizar os resultados da partida' });
+    }
+  }
 }

@@ -21,6 +21,18 @@ export default class MatchesService {
     }
   }
 
+  static async updateMatchResults(
+    id: number,
+    { homeTeamGoals, awayTeamGoals }: any,
+  ): Promise<boolean> {
+    try {
+      const success = await MatchesModel.updateMatchResults(id, { homeTeamGoals, awayTeamGoals });
+      return success;
+    } catch (error : any) {
+      throw new Error(`Erro ao atualizar os resultados da partida: ${error.message}`);
+    }
+  }
+
   private static formatMatchResponse(match: any): InterfaceMatches {
     return {
       id: match.id,

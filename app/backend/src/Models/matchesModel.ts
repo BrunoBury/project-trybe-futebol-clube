@@ -44,4 +44,27 @@ export default class MatchesModel {
 
     return true;
   }
+
+  static async updateMatchResults(
+    id: number,
+    { homeTeamGoals,
+      awayTeamGoals }: any,
+  ): Promise<boolean> {
+    try {
+      const match = await SequelizeMatchesModel.findByPk(id);
+
+      if (!match) {
+        throw new Error('Partida não encontrada');
+      }
+
+      match.homeTeamGoals = homeTeamGoals;
+      match.awayTeamGoals = awayTeamGoals;
+
+      await match.save();
+
+      return true;
+    } catch (error : any) {
+      throw new Error(`Erro ao atualizar os resultados da partida: ${error.message}`);
+    }
+  }
 }

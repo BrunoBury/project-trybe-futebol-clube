@@ -16,4 +16,12 @@ matchesRouter.patch(
   },
 );
 
+matchesRouter.patch(
+  '/matches/:id',
+  validateTokenMiddleware,
+  (req: Request, res: Response) => {
+    MatchesController.updateMatchResults(req, res);
+  },
+);
+
 export default matchesRouter;
