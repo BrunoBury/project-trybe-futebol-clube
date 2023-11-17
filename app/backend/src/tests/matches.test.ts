@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import MatchesService from '../Service/matchesService';
 import MatchesController from '../Controller/matchesController';
 import { InterfaceMatches } from '../Interfaces/interfaceMatches';
+import MatchesModel from '../Models/matchesModel';
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -100,5 +101,78 @@ it('Should handle updating match results not found', async () => {
   sinon.assert.calledWithExactly(res.json as sinon.SinonStub, { error: 'Partida não encontrada' });
 });
 
+describe('MatchesModel', () => { 
+  describe('getAllMatches', () => {
+    it('Should return an array of matches', async () => {
+      const matches = await MatchesModel.getAllMatches();
+      expect(matches).to.be.an('array');      
+    });
+  });
 
+  
+describe('getMatchesByStatus', () => {
+    it('Should return an array of matches based on status', async () => {
+      const inProgressMatches = await MatchesModel.getMatchesByStatus(true);
+      expect(inProgressMatches).to.be.an('array');
+     
+    });
+  });
+});
+
+describe('finishMatch', () => {
+  it('Should finish a match successfully', async () => {
+    
+    const matchFinished = await MatchesModel.finishMatch(10);
+    expect(matchFinished).to.equal(true);  
+  });
+
+  it('Should throw an error when match is not found', async () => {
+    try {
+      await MatchesModel.finishMatch(9999);
+      throw new Error('Should have thrown an error');
+    } catch (error) {
+      if (error instanceof Error) {
+        expect(error.message).to.equal('Partida não encontrada');
+      } else {
+        throw new Error('Unexpected error type');
+      }
+    }
+  });
+ })
+ describe('MatchesService', () => {
+  describe('getAllMatches', () => {
+    it('Should return an array of matches', async () => {
+      const matchesMock = [
+        { id: 1, homeTeamId: 10, awayTeamId: 20 },
+        { id: 2, homeTeamId: 15, awayTeamId: 25 },
+      ];
+
+      sinon.stub(MatchesModel, 'getAllMatches').resolves(matchesMock as any);
+
+      const matches = await MatchesService.getAllMatches();
+      expect(matches).to.be.an('array');
+    });
+  });
+});
+describe('getMatchesByStatus', () => {
+  it('Should return an array of matches based on status', async () => {
+    const inProgressMatchesMock = [
+      { id: 1, homeTeamId: 10, awayTeamId: 20 },
+      { id: 2, homeTeamId: 15, awayTeamId: 25 },
+    ];
+
+    sinon.stub(MatchesModel, 'getMatchesByStatus').resolves(inProgressMatchesMock as any);
+
+    const inProgressMatches = await MatchesService.getMatchesByStatus(true);
+    expect(inProgressMatches).to.be.an('array');
+  });
+});
+describe('updateMatchResults', () => {
+  it('Should update match results successfully', async () => {
+    sinon.stub(MatchesModel, 'updateMatchResults').resolves(true);
+
+    const updated = await MatchesService.updateMatchResults(10, { homeTeamGoals: 3, awayTeamGoals: 1 });
+    expect(updated).to.equal(true);
+  });
+ });
 });

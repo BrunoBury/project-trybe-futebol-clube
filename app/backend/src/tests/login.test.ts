@@ -31,4 +31,14 @@ describe('User Login test', function () {
 
     expect(authenticatedUser).to.be.undefined;
   });  
+
+  it('Should return the role for a user', async () => {
+    const email = 'user@example.com';
+
+    findOneStub.resolves({ dataValues: { role: 'admin' } });
+
+    const role = await UserModel.getRole(email);
+
+    expect(role).to.equal('admin');
+  });
 });
