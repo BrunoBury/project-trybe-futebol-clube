@@ -24,4 +24,12 @@ matchesRouter.patch(
   },
 );
 
+matchesRouter.post(
+  '/matches',
+  validateTokenMiddleware,
+  (req: Request, res: Response) => {
+    MatchesController.createInProgressMatch(req, res);
+  },
+);
+
 export default matchesRouter;

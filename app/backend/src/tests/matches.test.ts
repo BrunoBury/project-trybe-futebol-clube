@@ -5,6 +5,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 import MatchesService from '../Service/matchesService';
 import MatchesController from '../Controller/matchesController';
+import { InterfaceMatches } from '../Interfaces/interfaceMatches';
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -29,4 +30,75 @@ describe("Matches Controller", function () {
     expect((res.status as sinon.SinonStub).calledWith(500)).to.be.true; 
     expect((res.json as sinon.SinonStub).calledWith({ error: 'Internal server error' })).to.be.true; 
 }); 
+
+  it('Should get all matches successfully', async () => {
+   const req: Partial<Request> = { query: { inProgress: 'true' } };
+   const res: Partial<Response> = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+  };
+
+  const matchesMock: InterfaceMatches[] = [
+    {
+      id: 1,
+      homeTeamId: 10,
+      homeTeamGoals: 2,
+      awayTeamId: 20,
+      awayTeamGoals: 1,
+      inProgress: true,
+      homeTeam: { teamName: 'Home Team' },
+      awayTeam: { teamName: 'Away Team' },
+    },
+  ]
+  const getMatchesStub = sinon.stub(MatchesService, 'getMatchesByStatus').resolves(matchesMock);
+
+  await MatchesController.getAllMatches(req as Request, res as Response);
+
+  sinon.assert.calledOnce(getMatchesStub);
+  sinon.assert.calledOnce(res.status as sinon.SinonStub);
+  sinon.assert.calledWithExactly(res.status as sinon.SinonStub, 200);
+  sinon.assert.calledWithExactly(res.json as sinon.SinonStub, matchesMock);
+});
+
+it('Should finish match successfully', async () => {
+  const req: Partial<Request> = { params: { id: '1' } };
+  const res: Partial<Response> = {
+    status: sinon.stub().returnsThis(),
+    json: sinon.stub(),
+  };
+
+  const finishMatchStub = sinon.stub(MatchesService, 'finishMatch').resolves(true);
+
+  await MatchesController.finishMatch(req as Request, res as Response);
+
+  sinon.assert.calledOnceWithExactly(finishMatchStub, 1);
+  sinon.assert.calledOnce(res.status as sinon.SinonStub);
+  sinon.assert.calledWithExactly(res.status as sinon.SinonStub, 200);
+  sinon.assert.calledWithExactly(res.json as sinon.SinonStub, { message: 'Finished' });
+});
+
+it('Should handle updating match results not found', async () => {
+  const req: Partial<Request> = {
+    params: { id: '999' },
+    body: { homeTeamGoals: 3, awayTeamGoals: 1 },
+  };
+  const res: Partial<Response> = {
+    status: sinon.stub().returnsThis(),
+    json: sinon.stub(),
+  };
+
+  const updateMatchResultsStub = sinon.stub(MatchesService, 'updateMatchResults').resolves(false);
+
+  await MatchesController.updateMatchResults(req as Request, res as Response);
+
+  sinon.assert.calledOnceWithExactly(updateMatchResultsStub, 999, {
+    homeTeamGoals: 3,
+    awayTeamGoals: 1,
+  });
+  sinon.assert.calledOnce(res.status as sinon.SinonStub);
+  sinon.assert.calledWithExactly(res.status as sinon.SinonStub, 404);
+  sinon.assert.calledWithExactly(res.json as sinon.SinonStub, { error: 'Partida não encontrada' });
+});
+
+
 });

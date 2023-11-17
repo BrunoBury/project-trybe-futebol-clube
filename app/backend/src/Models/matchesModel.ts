@@ -67,4 +67,20 @@ export default class MatchesModel {
       throw new Error(`Erro ao atualizar os resultados da partida: ${error.message}`);
     }
   }
+
+  static async createMatchInProgress(matchData: any) {
+    const newMatch = await SequelizeMatchesModel.create({
+      ...matchData,
+      inProgress: true,
+    });
+
+    return {
+      id: newMatch.id,
+      homeTeamId: newMatch.homeTeamId,
+      homeTeamGoals: newMatch.homeTeamGoals,
+      awayTeamId: newMatch.awayTeamId,
+      awayTeamGoals: newMatch.awayTeamGoals,
+      inProgress: newMatch.inProgress,
+    };
+  }
 }

@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import MatchesService from '../Service/matchesService';
 
+const errorServer = 'Internal server error';
+
 export default class MatchesController {
   static async getAllMatches(req: Request, res: Response): Promise<void> {
     const { inProgress } = req.query;
-
     try {
       if (inProgress === 'true' || inProgress === 'false') {
         const matches = await MatchesService.getMatchesByStatus(inProgress === 'true');
@@ -15,7 +16,7 @@ export default class MatchesController {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: errorServer });
     }
   }
 
@@ -32,7 +33,7 @@ export default class MatchesController {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: errorServer });
     }
   }
 
@@ -54,6 +55,23 @@ export default class MatchesController {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Erro ao atualizar os resultados da partida' });
+    }
+  }
+
+  static async createInProgressMatch(req: Request, res: Response): Promise<void> {
+    const matchData = req.body;
+
+    try {
+      const newMatch = await MatchesService.createInProgressMatch(matchData);
+
+      if (newMatch) {
+        res.status(201).json(newMatch);
+      } else {
+        res.status(500).json({ error: 'Erro ao criar a partida' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: errorServer });
     }
   }
 }

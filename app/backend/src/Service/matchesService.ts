@@ -45,4 +45,13 @@ export default class MatchesService {
       awayTeam: match.awayTeam || null,
     };
   }
+
+  static async createInProgressMatch(matchData: any) {
+    try {
+      const newMatch = await MatchesModel.createMatchInProgress(matchData);
+      return newMatch;
+    } catch (error) {
+      throw new Error('Erro ao criar a partida');
+    }
+  }
 }
