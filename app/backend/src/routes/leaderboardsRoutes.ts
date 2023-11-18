@@ -7,4 +7,8 @@ leaderboardsRouter.get('/leaderboard/home', (req: Request, res: Response) => {
   LeaderboardController.getLeaderboard(req, res);
 });
 
+leaderboardsRouter.get('/leaderboard/away', (req: Request, res: Response) => {
+  LeaderboardController.getLeaderboard(req, res);
+});
+
 export default leaderboardsRouter;

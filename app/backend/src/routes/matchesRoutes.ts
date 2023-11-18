@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import MatchesController from '../Controller/matchesController';
 import validateTokenMiddleware from '../middleware/validateTokenMiddleware';
-import checkTeams from '../middleware/matchesValidade';
+import checkTeams from '../middleware/matchesValidate';
 
 const matchesRouter = Router();
 
